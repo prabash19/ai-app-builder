@@ -10,7 +10,8 @@ app.get("/api/test", (req: Request, res: Response) => {
   res.end("working");
 });
 app.post("/api/generate", async (req: Request, res: Response) => {
-  geminiInteractor(req.body?.prompt);
+  const data = await geminiInteractor(req.body?.prompt);
+  res.end(data);
 });
 app.all("/*splat", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Cannot find ${req.originalUrl}`, 404));
