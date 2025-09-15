@@ -10,6 +10,7 @@ function getEnvVar(key: string, defaultValue?: string): string {
 }
 
 export const config = {
+  NODE_ENV: getEnvVar("NODE_ENV", "development"),
   PORT: getEnvVar("PORT", "5000"),
   MONGO_URI: getEnvVar("MONGO_URI"),
   GEMINI_API_KEY: getEnvVar("GEMINI_API_KEY"),

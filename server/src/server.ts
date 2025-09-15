@@ -3,8 +3,19 @@ import { config } from "./config.js";
 import AppError from "./utils/globalErrorHandler.js";
 import { ErrorWithStatus } from "./types/index.js";
 import geminiInteractor from "./controllers/geminiAiController.js";
+import cors from "cors";
 
 const app = express();
+if (process.env.NODE_ENV === "development") {
+  app.use(cors());
+} else if (process.env.NODE_ENV === "production") {
+  app.use(
+    cors({
+      origin: ["https://api.example.com"],
+    })
+  );
+}
+
 app.use(express.json());
 app.get("/api/test", (req: Request, res: Response) => {
   res.end("working");
