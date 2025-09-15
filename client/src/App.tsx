@@ -5,7 +5,7 @@ import Sidebar from "./components/Sidebar";
 function App() {
   return (
     <div className="flex justify-center">
-      <div className="flex w-full max-w-[2000px] px-4">
+      <div className="flex w-full max-w-[2000px]">
         <Sidebar />
         <Main />
       </div>
