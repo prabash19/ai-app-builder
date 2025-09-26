@@ -13,11 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
+    "@google/generative-ai": "0.24.1",
+    "@inngest/agent-kit": "^0.12.2-alpha-20250926020707-705aa87351fffb762f63a7af317649a734a72f56",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "inngest": "^3.43.0"
+    "inngest": "3.43.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

@@ -1,13 +1,20 @@
 import { Inngest } from "inngest";
+import { openai, createAgent } from "@inngest/agent-kit";
 
 export const inngest = new Inngest({ id: "aiAppBuilder" });
-
-// Your new function:
 const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
-  async ({ event, step }) => {
-    await step.sleep("wait-a-moment", "1s");
+  async ({ event }) => {
+    const writer = createAgent({
+      name: "writer",
+      system: "You are an expert writer.  You summarize in two words",
+      model: openai({ model: "gpt-4o" }),
+    });
+    const output = await writer.run(
+      `summarize the following: ${event.data.email}`
+    );
+    console.log("output is", output);
     return { message: `Hello ${event.data.email}!` };
   }
 );
