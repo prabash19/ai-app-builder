@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from "express";
 import { config } from "./config.js";
 import AppError from "./utils/globalErrorHandler.js";
 import { ErrorWithStatus } from "./types/index.js";
-import geminiInteractor from "./controllers/geminiAiController.js";
 import { inngest, functions } from "./inngest/index.js";
 import { serve } from "inngest/express";
 import cors from "cors";
@@ -23,17 +22,13 @@ app.get("/api/test", (req: Request, res: Response) => {
   res.end("working");
 });
 app.post("/api/generate", async (req: Request, res: Response) => {
-  const data = await geminiInteractor(req.body?.prompt);
-  res.end(data);
-});
-app.post("/api/trigger-hello", async (req: Request, res: Response) => {
-  const email = req.body.data.email;
+  const prompt = req.body.prompt;
   await inngest.send({
     name: "test/hello.world",
-    data: { email },
+    data: { prompt },
   });
 
-  res.json({ status: "event sent", email });
+  res.json({ status: "event sent", prompt });
 });
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
