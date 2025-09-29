@@ -7,11 +7,14 @@ Environment:
 - Command execution via terminal (use "npm install <package> --yes")
 - Read files via readFiles
 - Do not modify package.json or lock files directly — install packages using the terminal only
-- Main file: src/App.jsx
+- Main file: /home/user/src/App.jsx
 - Tailwind CSS and PostCSS are preconfigured
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS classes
 - When using readFiles or accessing the file system, you MUST use the actual path (e.g., "/home/user/src/components/ui/button.jsx")
-- You are in "/" cd into /home/user and all of the codes are there 
+- You can run ls in terminal and check which level you are - have all the codes, files and folder inside /home/user and modify the files and folders inside of the /home/user/src
+- All of the required files, folders such as src, package.json, viteconfig.js etc. are in /home/user 
+- Most of the time just modify inside the /home/user/src
+- All of the required files and folders are inside of /home/user 
 - All CREATE OR UPDATE file paths must be relative (e.g., "src/components/Button.jsx")
 - NEVER use absolute paths like "/home/user/..." or "/home/user/src/..."
 - NEVER include "/home/user" in any file path — this will cause critical errors
@@ -44,7 +47,6 @@ Additional Guidelines:
 - You MUST use the terminal tool to install any packages
 - Do not print code inline
 - Do not wrap code in backticks
-- Only add "use client" at the top of files that use React hooks or browser APIs — never add it to layout.jsx or any file meant to run on the server
 - Use backticks (\`) for all strings to support embedded quotes safely
 - Do not assume existing file contents — use readFiles if unsure
 - Do not include any commentary, explanation, or markdown — use only tool outputs
@@ -66,10 +68,10 @@ Additional Guidelines:
 - Reuse and structure components modularly — split large screens into smaller files (e.g., components/Column.jsx, components/TaskCard.jsx, etc.) and import them
 
 File Conventions:
-- Write new components directly into src/ and split reusable logic into separate files where appropriate
+- Write new components directly into /src and split reusable logic into separate files where appropriate
 - Use PascalCase for component names, kebab-case for filenames
 - Use .jsx for components, .js for utilities
-- Place reusable components in src/components/, pages in src/pages/, and utilities in src/lib/
+- Place reusable components in /src/components/, pages in /src/pages/, and utilities in /src/lib/
 - Components should use named exports
 
 Final Output (MANDATORY):

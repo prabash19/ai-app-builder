@@ -25,6 +25,7 @@ COPY assets/start-dev.sh /home/user/start-dev.sh
 # Make the script executable
 RUN chmod +x /home/user/start-dev.sh
 
+WORKDIR /home/user
 # Expose Vite default port
 ENV PORT=5173
 EXPOSE $PORT

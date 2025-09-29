@@ -7,10 +7,10 @@ import {
   createNetwork,
 } from "@inngest/agent-kit";
 import { getSandBox, lastAssistantTextMessageContent } from "./utils.js";
-import { z } from "zod";
+import * as z from "zod";
 import createPrompt from "../utils/prompt.js";
 export const inngest = new Inngest({ id: "aiAppBuilder" });
-const helloWorld = inngest.createFunction(
+const sequencer = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
   async ({ event, step }) => {
@@ -161,5 +161,4 @@ const helloWorld = inngest.createFunction(
   }
 );
 
-// Add the function to the exported array:
-export const functions = [helloWorld];
+export const functions = [sequencer];
