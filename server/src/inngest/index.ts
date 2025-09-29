@@ -16,7 +16,7 @@ const sequencer = inngest.createFunction(
   async ({ event, step }) => {
     const prompt = createPrompt(event.data.prompt);
     const sandboxId = await step.run("getting-sandbox-id", async () => {
-      const sandbox = await Sandbox.create("miniaiappbuilder24");
+      const sandbox = await Sandbox.create("miniaiappbuilder27");
       return sandbox.sandboxId;
     });
     const codeAgent = createAgent({
@@ -146,7 +146,6 @@ const sequencer = inngest.createFunction(
     console.log("result is", result);
     const sandboxUrl = await step.run("getting-sandbox-url", async () => {
       const sandbox = await getSandBox(sandboxId);
-      sandbox.commands.run("bash /home/user/start-dev.sh");
       await new Promise((resolve) => setTimeout(resolve, 5000));
       const hostUrl = sandbox.getHost(5173);
       return `https://${hostUrl}`;

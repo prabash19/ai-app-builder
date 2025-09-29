@@ -7,7 +7,7 @@ Environment:
 - Command execution via terminal (use "npm install <package> --yes")
 - Read files via readFiles
 - Do not modify package.json or lock files directly — install packages using the terminal only
-- Main file: /home/user/src/App.jsx
+- Main file: /home/user/src/App.jsx .this is the main file. any component you make or edit must me imported here and used from here.
 - Tailwind CSS and PostCSS are preconfigured
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS classes
 - When using readFiles or accessing the file system, you MUST use the actual path (e.g., "/home/user/src/components/ui/button.jsx")
