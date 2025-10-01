@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { config } from "../utils/config";
 import { toast } from "react-toastify";
+import LoadingSpinner from "./Loader";
+import IframePage from "./Iframe";
 
 interface LocationState {
   prompt?: string;
@@ -15,7 +17,29 @@ function Interface() {
   const { state } = useLocation();
   const { prompt, mode } = (state as LocationState) || {};
   const notify = () => toast.success("Application Creation Process Started!");
+  const [url, setUrl] = useState<string | undefined>(undefined);
 
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080"); // or your deployed backend
+    socket.onopen = () => {
+      console.log("Connected to WebSocket server");
+    };
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.url) {
+        console.log("Sandbox URL received:", data.url);
+        setUrl(data.url);
+        setLoading(false);
+        window.open(data.url, "_blank", "noopener,noreferrer");
+      }
+    };
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       if (!prompt || !mode) {
@@ -142,8 +166,7 @@ function Interface() {
             <p className="text-slate-300 mb-8">
               Based on your requirements, here's what we've created.
             </p>
-
-            <div className="text-white">we have iframe here</div>
+            {loading ? <LoadingSpinner /> : <></>}{" "}
           </div>
         </div>
       </main>

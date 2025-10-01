@@ -16,7 +16,9 @@ const sequencer = inngest.createFunction(
   async ({ event, step }) => {
     const prompt = createAdvancedPrompt(event.data.prompt);
     const sandboxId = await step.run("getting-sandbox-id", async () => {
-      const sandbox = await Sandbox.create("miniaiappbuilder27");
+      const sandbox = await Sandbox.create("miniaiappbuilder30", {
+        timeoutMs: 0,
+      });
       return sandbox.sandboxId;
     });
     const codeAgent = createAgent({
@@ -145,11 +147,22 @@ const sequencer = inngest.createFunction(
     const result = await network.run(event.data.prompt);
     const sandboxUrl = await step.run("getting-sandbox-url", async () => {
       const sandbox = await getSandBox(sandboxId);
+      sandbox.commands.run("bash /home/user/start-dev.sh");
+
+      // Wait a bit for the server to start
       await new Promise((resolve) => setTimeout(resolve, 5000));
+
       const hostUrl = sandbox.getHost(5173);
-      return `https://${hostUrl}`;
+      console.log("host here is", hostUrl);
+      return hostUrl;
     });
-    console.log("url is", sandboxUrl);
+    await fetch(`http://${process.env.API_URL}/webhook/sandbox-ready`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url: sandboxUrl,
+      }),
+    });
     return {
       url: sandboxUrl,
       title: "Fragment",

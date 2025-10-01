@@ -6,6 +6,9 @@ import { inngest, functions } from "./inngest/index.js";
 import { serve } from "inngest/express";
 import cors from "cors";
 import geminiInteractor from "./interactor/gemini.js";
+import { WebSocketServer } from "ws";
+
+export const wss = new WebSocketServer({ port: 8080 });
 
 const app = express();
 if (process.env.NODE_ENV === "development") {
@@ -36,6 +39,20 @@ app.post("/api/generateadvanced", async (req: Request, res: Response) => {
   res.json({ status: "Creating in Background", prompt });
 });
 app.use("/api/inngest", serve({ client: inngest, functions }));
+app.post("/api/webhook/sandbox-ready", async (req, res) => {
+  try {
+    const payload = req.body;
+    wss.clients.forEach((client) => {
+      if (client.readyState === client.OPEN) {
+        client.send(JSON.stringify({ url: payload.url }));
+      }
+    });
+    res.status(200).json({ status: "ok" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: "error" });
+  }
+});
 app.all("/*splat", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Cannot find ${req.originalUrl}`, 404));
 });
