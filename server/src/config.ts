@@ -14,4 +14,5 @@ export const config = {
   PORT: getEnvVar("PORT", "5000"),
   MONGO_URI: getEnvVar("MONGO_URI"),
   OPENAI_API_KEY: getEnvVar("OPENAI_API_KEY"),
+  GEMINI_API_KEY: getEnvVar("GEMINI_API_KEY"),
 };

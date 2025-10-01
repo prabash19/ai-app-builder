@@ -8,13 +8,13 @@ import {
 } from "@inngest/agent-kit";
 import { getSandBox, lastAssistantTextMessageContent } from "./utils.js";
 import * as z from "zod";
-import createPrompt from "../utils/prompt.js";
+import { createAdvancedPrompt } from "../utils/prompt.js";
 export const inngest = new Inngest({ id: "aiAppBuilder" });
 const sequencer = inngest.createFunction(
-  { id: "hello-world" },
-  { event: "test/hello.world" },
+  { id: "advancedGen" },
+  { event: "advancedGen" },
   async ({ event, step }) => {
-    const prompt = createPrompt(event.data.prompt);
+    const prompt = createAdvancedPrompt(event.data.prompt);
     const sandboxId = await step.run("getting-sandbox-id", async () => {
       const sandbox = await Sandbox.create("miniaiappbuilder27");
       return sandbox.sandboxId;
@@ -141,9 +141,7 @@ const sequencer = inngest.createFunction(
         return codeAgent;
       },
     });
-    console.log("event data value is", event.data.prompt);
     const result = await network.run(event.data.prompt);
-    console.log("result is", result);
     const sandboxUrl = await step.run("getting-sandbox-url", async () => {
       const sandbox = await getSandBox(sandboxId);
       await new Promise((resolve) => setTimeout(resolve, 5000));

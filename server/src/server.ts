@@ -5,6 +5,7 @@ import { ErrorWithStatus } from "./types/index.js";
 import { inngest, functions } from "./inngest/index.js";
 import { serve } from "inngest/express";
 import cors from "cors";
+import geminiInteractor from "./interactor/gemini.js";
 
 const app = express();
 if (process.env.NODE_ENV === "development") {
@@ -21,16 +22,17 @@ app.use(express.json());
 app.get("/api/test", (req: Request, res: Response) => {
   res.end("working");
 });
+app.post("/api/generatebasic", async (req: Request, res: Response) => {
+  res.json(await geminiInteractor(req.body?.prompt));
+});
 app.post("/api/generate", async (req: Request, res: Response) => {
   const prompt = req.body.prompt;
   await inngest.send({
-    name: "test/hello.world",
+    name: "advancedGen",
     data: { prompt },
   });
-
-  res.json({ status: "event sent", prompt });
+  res.json({ status: "Creating in Background", prompt });
 });
-
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.all("/*splat", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Cannot find ${req.originalUrl}`, 404));
