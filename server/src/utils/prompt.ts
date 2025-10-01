@@ -108,6 +108,7 @@ From the user’s description of an app, extract:
 - GeneratedUI (Menu and Forms list)
 
 For each Entity, create at least 2–3 FormFields. 
+Always use camelCase only no other formats
 Each FormField must include:
 - name (camelCase key)
 - label (user-friendly text)
@@ -118,58 +119,122 @@ Each FormField must include:
 Return ONLY valid JSON in this structure:
 
 {
-  "AppName": "string",
-  "Entities": {
-    "EntityName": {
-      "FormFields": [
+  AppName: "string",
+  Entities: {
+    EntityName: {
+      FormFields: [
         { "name": "string", "label": "string", "type": "string", "required": true/false, "optionsSource": "optional string" }
       ]
     }
   },
-  "Roles": ["string"],
-  "Features": ["string"],
-  "GeneratedUI": {
-    "Menu": ["string"],
-    "Forms": ["string"]
+  Roles: ["string"],
+  Features: ["string"],
+  GeneratedUI: {
+    "Menu: ["string"],
+    Forms: ["string"]
   }
 }
 
 Example Input:
-"I want an app to manage student courses and grades. Teachers add courses, students enrol, and admins manage reports."
-
+"I want an app to manage employee tasks and performance. Managers assign tasks, employees update progress, and admins monitor reports."
 Example Output:
 {
-  "AppName": "Course Manager",
-  "Entities": {
-    "Student": {
-      "FormFields": [
-        { "name": "name", "label": "Name", "type": "text", "required": true },
-        { "name": "email", "label": "Email", "type": "email", "required": true },
-        { "name": "age", "label": "Age", "type": "number", "required": false }
-      ]
+    AppName: "Employee Task & Performance Manager",
+    Entities: {
+      Employee: {
+        FormFields: [
+          {
+            name: "firstName",
+            label: "First Name",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "lastName",
+            label: "Last Name",
+            type: "text",
+            required: true,
+          },
+          { name: "email", label: "Email", type: "email", required: true },
+          {
+            name: "department",
+            label: "Department",
+            type: "text",
+            required: false,
+          },
+        ],
+      },
+      Task: {
+        FormFields: [
+          { name: "title", label: "Task Title", type: "text", required: true },
+          {
+            name: "description",
+            label: "Description",
+            type: "text",
+            required: false,
+          },
+          {
+            name: "assignee",
+            label: "Assignee",
+            type: "select",
+            optionsSource: "Employee",
+            required: true,
+          },
+          { name: "dueDate", label: "Due Date", type: "date", required: true },
+          {
+            name: "status",
+            label: "Status",
+            type: "select",
+            options: ["Pending", "In Progress", "Completed", "Blocked"],
+            required: true,
+          },
+        ],
+      },
+      PerformanceReview: {
+        FormFields: [
+          {
+            name: "employee",
+            label: "Employee",
+            type: "select",
+            optionsSource: "Employee",
+            required: true,
+          },
+          {
+            name: "reviewer",
+            label: "Reviewer",
+            type: "select",
+            optionsSource: "Employee",
+            required: true,
+          },
+          {
+            name: "reviewDate",
+            label: "Review Date",
+            type: "date",
+            required: true,
+          },
+          {
+            name: "rating",
+            label: "Rating (1-5)",
+            type: "number",
+            required: true,
+          },
+          {
+            name: "comments",
+            label: "Comments",
+            type: "text",
+            required: false,
+          },
+        ],
+      },
     },
-    "Course": {
-      "FormFields": [
-        { "name": "title", "label": "Title", "type": "text", "required": true },
-        { "name": "code", "label": "Course Code", "type": "text", "required": true },
-        { "name": "credits", "label": "Credits", "type": "number", "required": true }
-      ]
+    Roles: ["Manager", "Employee", "Admin"],
+    Features: ["Assign tasks", "Update progress", "Monitor reports"],
+    GeneratedUI: {
+      Menu: ["Employees", "Tasks", "Performance Reviews"],
+      Forms: ["Employee", "Task", "PerformanceReview"],
     },
-    "Grade": {
-      "FormFields": [
-        { "name": "student", "label": "Student", "type": "select", "optionsSource": "Student", "required": true },
-        { "name": "course", "label": "Course", "type": "select", "optionsSource": "Course", "required": true },
-        { "name": "grade", "label": "Grade", "type": "text", "required": true }
-      ]
-    }
-  },
-  "Roles": ["Teacher", "Student", "Admin"],
-  "Features": ["Add course", "Enrol students", "View reports"],
-  "GeneratedUI": {
-    "Menu": ["Student", "Teacher", "Admin"],
-    "Forms": ["Student", "Course", "Grade"]
-  }
-} the user input is ${userInput}
+  };
+   the user input is ${userInput}
 `;
 };
 export { createAdvancedPrompt, createBasicPrompt };

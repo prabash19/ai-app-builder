@@ -1,9 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const [textValue, setTextValue] = useState("");
-  const handleSubmit = () => {
-    console.log("Textarea value:", textValue);
+  const [mode, setMode] = useState("basic");
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (mode === "basic") {
+      navigate("/BasicForm", {
+        state: { prompt: textValue, mode: "basic" },
+      });
+    } else {
+      navigate("/result", { state: { prompt: textValue, mode: "advanced" } });
+    }
   };
   const handleKeyDown = (e: {
     key: string;
@@ -37,6 +47,29 @@ export default function LandingPage() {
           onChange={(e) => setTextValue(e.target.value)}
           className="mt-0.5 w-full h-36 p-4 pb-14 text-2xl border-black outline-none focus:outline-none resize-none focus:border-black rounded-2xl border-2 shadow-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white"
         ></textarea>
+
+        <div className="absolute bottom-3 left-3 flex space-x-2">
+          <button
+            onClick={() => setMode("basic")}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              mode === "basic"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-200 text-black hover:bg-gray-300"
+            }`}
+          >
+            Basic
+          </button>
+          <button
+            onClick={() => setMode("advanced")}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              mode === "advanced"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-200 text-black hover:bg-gray-300"
+            }`}
+          >
+            Advanced
+          </button>
+        </div>
 
         <button
           onClick={handleSubmit}

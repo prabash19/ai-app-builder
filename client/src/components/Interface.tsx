@@ -1,7 +1,52 @@
-import { useState } from "react";
-
-function Sidebar() {
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { config } from "../utils/config";
+interface LocationState {
+  prompt?: string;
+  mode?: string;
+}
+function Interface() {
   const [isOpen, setIsOpen] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { state } = useLocation();
+  const { prompt, mode } = (state as LocationState) || {};
+  console.log("prompt here is", prompt, "state here is", state);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!prompt || !mode) {
+        setError("No prompt or mode provided");
+        setLoading(false);
+        return;
+      }
+      try {
+        const endpoint =
+          mode === "basic"
+            ? `${config.baseUrl}/generatebasic`
+            : `${config.baseUrl}/generateadvanced`;
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt,
+          }),
+        });
+        const data = await response.json();
+        setResult(data);
+      } catch (err) {
+        console.error("Error during POST request:", err);
+        setError("Failed to fetch data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [prompt, mode]);
   const menuItems = [
     { label: "Home" },
     { label: "Explore" },
@@ -14,7 +59,6 @@ function Sidebar() {
   ];
   return (
     <div className="min-h-screen flex w-full">
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-800 shadow-lg lg:hidden hover:bg-slate-700 transition-colors text-white"
@@ -49,22 +93,18 @@ function Sidebar() {
           </svg>
         )}
       </button>
-      {/* Overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
-
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 z-40 h-screen w-64 bg-slate-950 shadow-2xl transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:z-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo */}
           <div className="p-6 border-b border-slate-700">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -73,8 +113,6 @@ function Sidebar() {
               <span className="text-xl font-bold text-white">App Builder</span>
             </div>
           </div>
-
-          {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
             {menuItems.map((item, index) => (
               <button
@@ -87,8 +125,6 @@ function Sidebar() {
               </button>
             ))}
           </nav>
-
-          {/* User Profile */}
           <div className="p-4 border-t border-slate-700">
             <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-800 cursor-pointer transition-colors">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
@@ -102,8 +138,6 @@ function Sidebar() {
           </div>
         </div>
       </aside>
-
-      {/* Main Content */}
       <main className="flex-1 w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 overflow-x-hidden">
         <div className="p-8">
           <div className="max-w-4xl">
@@ -111,7 +145,8 @@ function Sidebar() {
             <p className="text-slate-300 mb-8">
               Based on your requirements, here's what we've created.
             </p>
-            <></>
+
+            <div className="text-white">we have iframe here</div>
           </div>
         </div>
       </main>
@@ -119,4 +154,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default Interface;

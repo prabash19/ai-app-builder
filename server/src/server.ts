@@ -25,7 +25,7 @@ app.get("/api/test", (req: Request, res: Response) => {
 app.post("/api/generatebasic", async (req: Request, res: Response) => {
   res.json(await geminiInteractor(req.body?.prompt));
 });
-app.post("/api/generate", async (req: Request, res: Response) => {
+app.post("/api/generateadvanced", async (req: Request, res: Response) => {
   const prompt = req.body.prompt;
   await inngest.send({
     name: "advancedGen",
@@ -48,7 +48,6 @@ app.use(
     });
   }
 );
-
 const server = app.listen(config.PORT, () => {
   console.log(`Server running on http://localhost:${config.PORT}`);
 });
