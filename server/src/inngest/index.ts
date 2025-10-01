@@ -11,8 +11,8 @@ import * as z from "zod";
 import { createAdvancedPrompt } from "../utils/prompt.js";
 export const inngest = new Inngest({ id: "aiAppBuilder" });
 const sequencer = inngest.createFunction(
-  { id: "advancedGen" },
-  { event: "advancedGen" },
+  { id: "hello-world" },
+  { event: "test/hello.world" },
   async ({ event, step }) => {
     const prompt = createAdvancedPrompt(event.data.prompt);
     const sandboxId = await step.run("getting-sandbox-id", async () => {
@@ -141,6 +141,7 @@ const sequencer = inngest.createFunction(
         return codeAgent;
       },
     });
+    console.log("sandbox id is", sandboxId);
     const result = await network.run(event.data.prompt);
     const sandboxUrl = await step.run("getting-sandbox-url", async () => {
       const sandbox = await getSandBox(sandboxId);

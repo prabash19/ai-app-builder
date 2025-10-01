@@ -26,11 +26,13 @@ app.post("/api/generatebasic", async (req: Request, res: Response) => {
   res.json(await geminiInteractor(req.body?.prompt));
 });
 app.post("/api/generateadvanced", async (req: Request, res: Response) => {
+  console.log("here");
   const prompt = req.body.prompt;
-  await inngest.send({
-    name: "advancedGen",
+  const a = await inngest.send({
+    name: "test/hello.world",
     data: { prompt },
   });
+  console.log("A is", a);
   res.json({ status: "Creating in Background", prompt });
 });
 app.use("/api/inngest", serve({ client: inngest, functions }));

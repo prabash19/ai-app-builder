@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { config } from "../utils/config";
+import { toast } from "react-toastify";
+
 interface LocationState {
   prompt?: string;
   mode?: string;
@@ -12,7 +14,7 @@ function Interface() {
   const [error, setError] = useState<string | null>(null);
   const { state } = useLocation();
   const { prompt, mode } = (state as LocationState) || {};
-  console.log("prompt here is", prompt, "state here is", state);
+  const notify = () => toast.success("Application Creation Process Started!");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,11 +24,7 @@ function Interface() {
         return;
       }
       try {
-        const endpoint =
-          mode === "basic"
-            ? `${config.baseUrl}/generatebasic`
-            : `${config.baseUrl}/generateadvanced`;
-        const response = await fetch(endpoint, {
+        const response = await fetch(`${config.baseUrl}/generateadvanced`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -35,8 +33,7 @@ function Interface() {
             prompt,
           }),
         });
-        const data = await response.json();
-        setResult(data);
+        notify();
       } catch (err) {
         console.error("Error during POST request:", err);
         setError("Failed to fetch data");
